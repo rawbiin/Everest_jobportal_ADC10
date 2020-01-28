@@ -9,8 +9,9 @@
 <body>
     <h2>add section</h2>
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {%csrf_token%}
+    <span>Job Image: <input type="file" name="job_logo"></span>
      <span>jobs name</span><input type="text" name="jobs_name" placeholder="Enter Job Name"><br><br>
      <span>jobs description</span><input type="text" name="jobs_description" placeholder="Enter Job Name"><br><br>
      <span>jobs Title</span><input type="text" name="jobs_Title" placeholder="Enter job Title" ><br><br>

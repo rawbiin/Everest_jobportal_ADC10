@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Jobs
+from django.core.files.storage import FileSystemStorage
+
 # Create your views here.
 def get_job_home(req):
     all_jobs=Jobs.objects.all()
@@ -17,13 +19,20 @@ def get_job_home(req):
 def get_add_jobs(req):
     if req.method=="GET":
         return render(req,'add_jobs.html')  
-    else:   
+    else:
+        job_logo=req.FILES['job_logo']
+
+        fs=FileSystemStorage()
+        filename=fs.save(job_logo.name,job_logo)
+
+        url=fs.url(filename)
+
         jobs_name=req.POST['jobs_name']
         jobs_description=req.POST['jobs_description']
         jobs_Title=req.POST['jobs_Title']
         location=req.POST['jobs_location']
         salary=req.POST['jobs_salary']
-        jobs=Jobs(jobs_name=jobs_name,jobs_Title=jobs_Title,jobs_description=jobs_description,location=location,salary=salary)
+        jobs=Jobs(job_image=url,jobs_name=jobs_name,jobs_Title=jobs_Title,jobs_description=jobs_description,location=location,salary=salary)
         jobs.save()
         
         return redirect('jobs_home')
@@ -37,7 +46,14 @@ def get_update_jobs(req,ID):
         }
         return render(req,'update_jobs.html',context=context)  
     else:
+        job_logo=req.FILES['job_logo']
 
+        fs=FileSystemStorage()
+        filename=fs.save(job_logo.name,job_logo)
+
+        url=fs.url(filename)
+
+        
         jobs_name=req.POST['jobs_name']
         jobs_description=req.POST['jobs_description']
         jobs_Title=req.POST['jobs_Title']
@@ -49,6 +65,7 @@ def get_update_jobs(req,ID):
         prev_job.location=location
         prev_job.salary=salary
         prev_job.jobs_Title=jobs_Title
+        prev_job.job_logo=url
         
         return redirect('jobs_home')
 
