@@ -3,6 +3,12 @@ from .models import Jobs
 # Create your views here.
 def get_job_home(req):
     all_jobs=Jobs.objects.all()
+    if 'query_name' in req.GET:
+        query_name=req.GET['query_name']
+        all_jobs=Jobs.objects.filter(jobs_name=query_name)
+        if query_name=="":
+            all_jobs=Jobs.objects.all()
+
     context={
         "all_jobs":all_jobs
     }
